@@ -177,6 +177,7 @@ export default {
       let max = elems[elems.length - 1].cx.baseVal.value
       let diff = max - min
       let numCircles = elems.length
+      let animes = []
       elems.forEach(function(elem) {
         let startTime = (durInMillis/2)-((elem.cx.baseVal.value - min)/diff)*(durInMillis/2)
         console.log(startTime)
@@ -190,10 +191,33 @@ export default {
           loop: true,
           easing: 'easeInOutCubic'
         })
+        animes.push(animation)
         animation.seek(startTime)
-        animation.play()
+        //animation.play()
       })
-
+      anime({
+        targets: document.getElementsByClassName('st1'),
+        r: function (e) {
+          return [0, e.r.baseVal.value]
+        },
+        duration: 1000,
+        delay: 700,
+        loop: false,
+        easing: 'easeInOutCubic'
+      })
+      let lines = document.getElementsByClassName('st0')
+      anime({
+        targets: lines,
+        duration: 1500,
+        strokeDashoffset: [anime.setDashoffset, 0],
+        easing: 'easeInOutCubic',
+        delay: 500,
+        complete: function(a) {
+          animes.forEach(function(e) {
+            e.play()
+          })
+        }
+      })
     }
   }
 }
