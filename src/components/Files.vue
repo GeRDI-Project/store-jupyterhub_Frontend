@@ -96,8 +96,10 @@ export default {
     login() {
       let self = this
       let id = this.$route.params.sessionId
-      let url = '/api/v1/store-jhub/login/' + id
-      axios.post(url, null)
+      let url = '/api/v1/store-jhub/login/' + id + '?wait'
+      axios.post(url, null, {
+        timeout: 120000
+      })
       .then(function(response) {
         self.load()
       })

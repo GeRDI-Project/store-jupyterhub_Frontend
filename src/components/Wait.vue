@@ -152,7 +152,8 @@
                style="fill:#063f63" /></g></g>
              </svg>
     <div class="text-center">
-      We are setting up your Jupyter Notebook instance. This may take a minute or two. You will automatically be forwarded.
+      <h3>Setting up your storage</h3>
+      We are setting up your Jupyter Notebook storage. This may take a minute or two. You will be automatically forwarded.
     </div>
   </div>
 </template>
@@ -168,7 +169,7 @@ export default {
   methods: {
     load() {
       let resizeFactor = 1.5
-      let durInMillis = 1500
+      let durInMillis = 1700
       let elems = Array.prototype.slice.call(document.getElementsByClassName('st1'))
       elems.sort(function(a,b) {
         return a.cx.baseVal.value - b.cx.baseVal.value
@@ -180,7 +181,6 @@ export default {
       let animes = []
       elems.forEach(function(elem) {
         let startTime = (durInMillis/2)-((elem.cx.baseVal.value - min)/diff)*(durInMillis/2)
-        console.log(startTime)
         let animation = anime({
           targets: elem,
           r: [elem.r.baseVal.value, elem.r.baseVal.value * resizeFactor],
