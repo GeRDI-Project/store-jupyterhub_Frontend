@@ -6,8 +6,11 @@ import Overview from './components/Overview'
 import DownloadItem from './components/DownloadItem'
 import Files from './components/Files'
 import File from './components/File'
+import FileList from './components/FileList'
+import Wait from './components/Wait'
 //import router from './router'
 import sharedUI from 'shared-ui'
+import { store } from './store/store'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faFolder, faFile, faSpinner, faFolderPlus, faFileUpload } from '@fortawesome/free-solid-svg-icons'
@@ -34,9 +37,12 @@ Vue.component('overview', Overview)
 Vue.component('download-item', DownloadItem)
 Vue.component('files', Files)
 Vue.component('file', File)
+Vue.component('file-list', FileList)
+Vue.component('wait', Wait)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store: store,
   router,
   template: '<App/>',
   components: {

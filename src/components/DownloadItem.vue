@@ -24,13 +24,15 @@ export default {
       return 'success'
     },
     realProgress: function() {
-      return (this.state == 'UNKNOWN_SIZE' || this.state == 'ERROR') ? 100 : this.progress
+      return (this.state == 'UNKNOWN_SIZE' || this.state == 'ERROR' || this.state == 'FINISHED') ? 100 : this.progress
     },
     translatedLabel: function() {
       if (this.state == 'UNKNOWN_SIZE') {
         return 'Unknown Size'
       } else if (this.state == 'ERROR') {
         return 'Error'
+      } else if (this.state == 'FINISHED') {
+        return '100'
       } else {
         return this.progress.toString()
       }

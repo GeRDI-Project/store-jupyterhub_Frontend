@@ -21,38 +21,7 @@
            id="metadata55"><rdf:RDF><cc:Work
                rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
                  rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
-           id="defs53" /><sodipodi:namedview
-           pagecolor="#ffffff"
-           bordercolor="#666666"
-           borderopacity="1"
-           objecttolerance="10"
-           gridtolerance="10"
-           guidetolerance="10"
-           inkscape:pageopacity="0"
-           inkscape:pageshadow="2"
-           inkscape:window-width="2560"
-           inkscape:window-height="1413"
-           id="namedview51"
-           showgrid="false"
-           fit-margin-top="10"
-           fit-margin-left="10"
-           fit-margin-right="10"
-           fit-margin-bottom="10"
-           inkscape:zoom="1.18"
-           inkscape:cx="-95.475854"
-           inkscape:cy="-179.27167"
-           inkscape:window-x="1920"
-           inkscape:window-y="0"
-           inkscape:window-maximized="1"
-           inkscape:current-layer="g38"
-           showguides="true"
-           inkscape:guide-bbox="true"><sodipodi:guide
-             position="327.24069,-5.1818423"
-             orientation="1,0"
-             id="guide3405" /><sodipodi:guide
-             position="54.359324,7.530022"
-             orientation="0,1"
-             id="guide3407" /></sodipodi:namedview><g
+           id="defs53" /><g
            id="g4600"
            transform="translate(-145.10339,-157.23725)"><g
              id="g24"
@@ -151,10 +120,6 @@
                class="st1"
                style="fill:#063f63" /></g></g>
              </svg>
-    <div class="text-center">
-      <h3>Setting up your storage</h3>
-      We are setting up your Jupyter Notebook storage. This may take a minute or two. You will be automatically forwarded.
-    </div>
   </div>
 </template>
 
@@ -168,6 +133,7 @@ export default {
   },
   methods: {
     load() {
+      let self = this
       let resizeFactor = 1.5
       let durInMillis = 1700
       let elems = Array.prototype.slice.call(document.getElementsByClassName('st1'))
@@ -191,8 +157,8 @@ export default {
           loop: true,
           easing: 'easeInOutCubic'
         })
-        animes.push(animation)
         animation.seek(startTime)
+        self.$store.commit('addAnimation', animation)
         //animation.play()
       })
       anime({
@@ -213,8 +179,12 @@ export default {
         easing: 'easeInOutCubic',
         delay: 500,
         complete: function(a) {
-          animes.forEach(function(e) {
-            e.play()
+          self.$store.commit('playAnimations')
+          let id = self.$route.params.sessionId
+          let dir = self.$route.query.dir
+          self.$store.dispatch('load', {
+            sessionId: id,
+            dir: dir
           })
         }
       })
@@ -228,7 +198,7 @@ export default {
 .center {
   margin: auto;
   width: 100%;
-  margin-top: 3rem;
-  margin-bottom: 3rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 </style>

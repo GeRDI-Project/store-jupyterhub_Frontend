@@ -1,57 +1,49 @@
 <template>
-  <div class="hello">
-    <div class="files-display">
-      <h4>Store - GeRDI Jupyter Hub - Select destination...</h4>
-        <div class="d-flex">
-          <b-breadcrumb class="w-100">
-            <b-breadcrumb-item class="bc-item" :to="{ name: 'files', params: { sessionId: $route.params.sessionId } }">home</b-breadcrumb-item>
-            <b-breadcrumb-item class="bc-item" v-for="i in path.length" :active="i == path.length" :key="i" :to="{ name: 'files', params: { sessionId: $route.params.sessionId }, query: { dir: path.slice(0,i).reduce((a,c) => a+c+'/', '/') } }">
-              {{ path[i-1] }}
-            </b-breadcrumb-item>
-          </b-breadcrumb>
-          <b-btn variant="secondary" size="lg" class="flex-shrink-1 align-self-center files-btn" :to="{ name: 'overview', params: { sessionId: $route.params.sessionId }, query: { dir: path.reduce((a,c) => a+c+'/', '/') } }"><font-awesome-icon icon="folder-plus"/></b-btn>
-          <b-btn variant="primary" size="lg" class="flex-shrink-1 align-self-center files-btn" :to="{ name: 'overview', params: { sessionId: $route.params.sessionId }, query: { dir: path.reduce((a,c) => a+c+'/', '/') } }"><font-awesome-icon icon="file-upload"/></b-btn>
-        </div>
-      <div v-if="!loading">
-        <b-list-group>
-          <file v-for="file in sortedFiles" :title="file.displayName" :type="file.type" :uri="file.uri" :key="file.uri"/>
-          <b-list-group-item v-if="files.length == 0">Empty Directory</b-list-group-item>
-        </b-list-group>
-      </div>
-      <b-alert v-else-if="error" show variant="danger">Error while communicating with server</b-alert>
-      <div v-else class="d-flex justify-content-center">
-        <font-awesome-icon icon="spinner" size="3x" spin />
-      </div>
-      <div id="overlay" v-if="overlay">
-        <div id="text">
-          <h2>Please log in to proceed</h2>
-          <a :href="windowUrl" target="_blank">Click here to open the login window.</a>
-        </div>
-      </div>
+  <div>
+    <wait></wait>
+    <h3 class="text-center">Setting up your Jupyter Hub storage</h3>
+    <div v-if="step == 0">
+      <h5>You are being logged in into the storage provider right now.</h5>
     </div>
-    <b-modal ref="failedLogin" title="Failed to log in" :ok-only="true" ok-title="Go back to Bookmark" @ok="ok">
-      We weren't able to log you in. Please retry later.
-    </b-modal>
+    <div v-if="step == 1">
+      <h5>Waiting for your storage space to be created.</h5>
+    </div>
+    <div v-if="step == 2 || step == 3">
+      <h5>Please select a location where all files should be copied to.</h5>
+      <transition appear v-on:after-leave="leftSelect" name="fade">
+        <file-list v-if="step == 2" class="files-display"></file-list>
+      </transition>
+    </div>
+    <div v-if="step == 4 || step == 5">
+      <h5>The selected files are being copied to your storage space.</h5>
+      <transition appear name="fade" v-on:after-leave="leftOverview">
+        <overview v-if="step == 4" class="files-display"></overview>
+      </transition>
+    </div>
+    <div v-if="step == 6">
+      <h5>All selected files have been successfully copied to your storage space.</h5>
+      <transition appear name="fade">
+        <div v-if="step == 6" class="files-display text-center">
+          <b-button variant="link" @click="ok()">Go Back to Bookmark</b-button>
+          <b-button variant="outline-primary" @click="openJupyter()">Open your Jupyter Notebook</b-button>
+        </div>
+      </transition>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import usercookie from '../util/usercookie.js'
 
 export default {
   name: 'Files',
   data () {
     return {
-      files: [],
-      loading: true,
-      error: false,
       windowRef: {},
       overlay: false,
       retries: 0
     }
-  },
-  created() {
-    this.load()
   },
   computed: {
     path: function() {
@@ -62,11 +54,19 @@ export default {
       return []
     },
     sortedFiles: function() {
-      return this.files.sort(function(a,b) {
-        if (a.type == 'httpd/unix-directory' && b.type != 'httpd/unix-directory') return -1;
-        if (a.type != 'httpd/unix-directory' && b.type == 'httpd/unix-directory') return 1;
-        return 0;
-      })
+      return this.$store.getters.getFilesList
+    },
+    files: function() {
+      return this.$store.getters.getFilesList
+    },
+    loading: function() {
+        return this.$store.getters.isLoading
+    },
+    error: function() {
+        return this.$store.getters.hasError
+    },
+    step: function() {
+        return this.$store.getters.getCurrentStep
     }
   },
   watch: {
@@ -74,41 +74,31 @@ export default {
   },
   methods: {
     load() {
-      const self = this
-      var id = this.$route.params.sessionId
-      let url = '/api/v1/store-jhub/files/' + id
-      if(this.$route.query.dir) url += ('?dir=' + this.$route.query.dir)
-      self.loading = true
-      self.error = false
-      axios.get(url)
-      .then(function(response) {
-        self.files = response.data
-        self.loading = false
+      let id = this.$route.params.sessionId
+      let dir = this.$route.query.dir
+      this.$store.dispatch('load', {
+        sessionId: id,
+        dir: dir
       })
-      .catch(function(error) {
-        if (error.response.status == 403) {
-          self.login()
-        } else {
-          self.error = true
-        }
-      });
     },
     login() {
       let self = this
       let id = this.$route.params.sessionId
-      let url = '/api/v1/store-jhub/login/' + id + '?wait'
-      axios.post(url, null, {
-        timeout: 120000
+      this.$store.dispatch('load', {
+        sessionId: id
       })
-      .then(function(response) {
-        self.load()
-      })
-      .catch(function(e) {
-        self.$refs.failedLogin.show()
-      })
+    },
+    leftSelect: function() {
+      this.$store.commit('leftSelect')
+    },
+    leftOverview: function() {
+      this.$store.commit('leftOverview')
     },
     ok() {
       window.location='/bookmark'
+    },
+    openJupyter() {
+      window.location='/analyze/user/' + usercookie.getUsername() + '/tree'
     }
   }
 }
@@ -121,7 +111,13 @@ export default {
 }
 
 .files-display {
+  margin: auto;
   margin-top: 2rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  width: 100%;
+  max-height: 3000px;
+  opacity: 1;
 }
 
 .bc-item {
@@ -131,6 +127,18 @@ export default {
 .files-btn {
   margin-left: 0.5rem;
   margin-bottom: 1rem;
+}
+
+h5 {
+  text-align: center;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: max-height 2s ease-in-out;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  max-height: 0px;
+  opacity: 1;
 }
 
 #overlay {
