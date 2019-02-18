@@ -10,20 +10,11 @@ Vue.use(Router)
 
 export default new Router({
   mode: 'history',
-  routes: [{
-    path: '/store-jhub/overview/:sessionId',
-    name: 'overview',
-    component: Overview
-  },
+  routes: [
   {
     path: '/store-jhub/files/:sessionId',
     name: 'files',
     component: Files
-  },
-  {
-    path: '/store-jhub/wait/:sessionId',
-    name: 'wait',
-    component: Wait
   }
   ]
 })

@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <svg alt="Wait Animation" class="center wait-logo"
+    <svg alt="Wait Animation" class=""
          xmlns:dc="http://purl.org/dc/elements/1.1/"
          xmlns:cc="http://creativecommons.org/ns#"
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
@@ -120,7 +119,6 @@
                class="st1"
                style="fill:#063f63" /></g></g>
              </svg>
-  </div>
 </template>
 
 <script>

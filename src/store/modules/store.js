@@ -137,7 +137,7 @@ const actions = {
     commit('creatingVolume')
     let self = this
     let id = payload.id
-    let url = '/api/v1/store-jhub/login/' + payload.id + '?wait'
+    let url = '/api/v1/store-jhub/login/' + payload.id + '?wait=1'
     axios.post(url, null, {
       timeout: 120000
     })

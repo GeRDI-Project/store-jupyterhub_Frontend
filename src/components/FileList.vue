@@ -6,10 +6,12 @@
         <b-breadcrumb-item class="bc-item" v-for="i in path.length" :active="i == path.length" :key="i" :to="{ name: 'files', params: { sessionId: $route.params.sessionId }, query: { dir: path.slice(0,i).reduce((a,c) => a+c+'/', '/') } }">
           {{ path[i-1] }}
         </b-breadcrumb-item>
+        <div class="breadcrumb-btn-group">
+          <b-btn variant="link" size="sm" @click="createDir({ name: 'overview', params: { sessionId: $route.params.sessionId }, query: { dir: path.reduce((a,c) => a+c+'/', '/') } })">Create Folder</b-btn>
+          <b-btn variant="primary" size="sm" @click="upload(path.reduce((a,c) => a+c+'/', '/') )">Store Here</b-btn>
+        </div>
       </b-breadcrumb>
-      <b-btn variant="secondary" size="lg" class="flex-shrink-1 align-self-center files-btn" @click="createDir({ name: 'overview', params: { sessionId: $route.params.sessionId }, query: { dir: path.reduce((a,c) => a+c+'/', '/') } })"><font-awesome-icon icon="folder-plus"/></b-btn>
-      <b-btn variant="primary" size="lg" class="flex-shrink-1 align-self-center files-btn" @click="upload(path.reduce((a,c) => a+c+'/', '/') )"><font-awesome-icon icon="file-upload"/></b-btn>
-    </div>
+      </div>
     <b-list-group>
       <file v-for="file in sortedFiles" :title="file.displayName" :type="file.type" :uri="file.uri" :key="file.uri"/>
       <b-list-group-item v-if="files.length == 0">Empty Directory</b-list-group-item>
@@ -67,16 +69,22 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.breadcrumb {
+  position: relative;
+}
+
+.breadcrumb-btn-group {
+  position: absolute;
+  right:1rem;
+  top:50%;
+  transform:translateY(-50%);
+}
+
 .breadcrumb > li + li.ml-auto:before {
   content: none;
 }
 
 .bc-item {
   vertical-align: sub;
-}
-
-.files-btn {
-  margin-left: 0.5rem;
-  margin-bottom: 1rem;
 }
 </style>

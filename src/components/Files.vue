@@ -1,7 +1,13 @@
 <template>
   <div>
-    <wait></wait>
+    <wait class="wait-logo"/>
     <h3 class="text-center">Setting up your Jupyter Hub storage</h3>
+    <ul class="list-unstyled multi-steps">
+      <li :class="{ 'is-active': step == 0 }">Login</li>
+      <li :class="{ 'is-active': step == 1 }">Create Storage</li>
+      <li :class="{ 'is-active': step == 2 || step == 3 }">Select Location</li>
+      <li :class="{ 'is-active': step == 4 || step == 5 }">Copy Files</li>
+    </ul>
     <div v-if="step == 0">
       <h5>You are being logged in into the storage provider right now.</h5>
     </div>
@@ -20,10 +26,10 @@
         <overview v-if="step == 4" class="files-display"></overview>
       </transition>
     </div>
-    <div v-if="step == 6">
+    <div v-if="step == 6" class="text-center">
       <h5>All selected files have been successfully copied to your storage space.</h5>
       <transition appear name="fade">
-        <div v-if="step == 6" class="files-display text-center">
+        <div v-if="step == 6" class="files-display">
           <b-button variant="link" @click="ok()">Go Back to Bookmark</b-button>
           <b-button variant="outline-primary" @click="openJupyter()">Open your Jupyter Notebook</b-button>
         </div>
@@ -105,28 +111,102 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style lang="scss" scoped>
+$brand-primary: #083f64;
+$white: #fff;
+$grey-light: #ededed;
+%remain-steps{
+  &:before {
+    content: counter(stepNum);
+    font-family: inherit;
+    font-weight: 700;
+  }
+  &:after{
+    background-color: $grey-light;
+  }
+}
+.multi-steps{
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  margin: 2rem auto 2rem;
+  > li{
+    counter-increment: stepNum;
+    text-align: center;
+    display: table-cell;
+    position: relative;
+    color: $brand-primary;
+
+    &:before{
+      content: '\f00c';
+      content: '\2713;';
+      content: '\10003';
+      content: '\10004';
+      content: '\2713';
+      display: block;
+      margin: 0 auto 4px;
+      background-color: $white;
+      width: 36px;
+      height: 36px;
+      line-height: 32px;
+      text-align: center;
+      font-weight: bold;
+      border:{
+        width: 2px;
+        style: solid;
+        color: $brand-primary;
+        radius: 50%;
+      }
+    }
+    &:after{
+      content: '';
+      height: 2px;
+      width: 100%;
+      background-color: $brand-primary;
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      z-index: -1;
+    }
+    &:last-child{
+      &:after{
+        display: none;
+      }
+    }
+
+    &.is-active{
+      @extend %remain-steps;
+      &:before{
+        background-color: $white;
+        border-color: $brand-primary;
+      }
+
+      ~ li{
+        color: #808080;
+        @extend %remain-steps;
+        &:before{
+          background-color: $grey-light;
+          border-color: $grey-light;
+        }
+      }
+    }
+  }
+}
+
 .breadcrumb > li + li.ml-auto:before {
   content: none;
 }
 
 .files-display {
-  margin: auto;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
   overflow: hidden;
-  width: 100%;
   max-height: 3000px;
   opacity: 1;
 }
 
 .bc-item {
   vertical-align: sub;
-}
-
-.files-btn {
-  margin-left: 0.5rem;
-  margin-bottom: 1rem;
 }
 
 h5 {
@@ -139,6 +219,14 @@ h5 {
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   max-height: 0px;
   opacity: 1;
+}
+
+.wait-logo {
+    margin: auto;
+    width: 100%;
+    height: 200px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 #overlay {
