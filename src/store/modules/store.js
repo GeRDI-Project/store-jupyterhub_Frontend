@@ -162,6 +162,26 @@ const actions = {
       console.error(error)
     });
   },
+  createDir({ commit, state }, payload ) {
+    let self = this
+    commit('setLoading', true)
+    let url = '/api/v1/store-jhub/createdir/' + payload.sessionId + '/' + payload.dirName
+    if(payload.dir) url += ('?dir=' + payload.dir)
+    return new Promise(function (resolve, reject) {
+      axios.get(url)
+      .then(function(response) {
+        resolve(response)
+        self.dispatch('load', {
+          sessionId: payload.sessionId,
+          dir: payload.dir
+        })
+      })
+      .catch(function(error) {
+        reject(error)
+        console.error(error)
+      });
+    })
+  },
   updateProgress({ commit, state }, payload ) {
     let self = this
     axios.get('/api/v1/store-jhub/progress/' + payload)

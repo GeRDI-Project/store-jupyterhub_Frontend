@@ -8,19 +8,17 @@ import Files from './components/Files'
 import File from './components/File'
 import FileList from './components/FileList'
 import Wait from './components/Wait'
+import DirPopover from './components/DirPopover'
 //import router from './router'
 import sharedUI from 'shared-ui'
 import { store } from './store/store'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faFolder, faFile, faSpinner, faFolderPlus, faFileUpload } from '@fortawesome/free-solid-svg-icons'
+import { faFolder, faFile } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faFolder)
 library.add(faFile)
-library.add(faSpinner)
-library.add(faFolderPlus)
-library.add(faFileUpload)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -39,6 +37,7 @@ Vue.component('files', Files)
 Vue.component('file', File)
 Vue.component('file-list', FileList)
 Vue.component('wait', Wait)
+Vue.component('dir-popover', DirPopover)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
