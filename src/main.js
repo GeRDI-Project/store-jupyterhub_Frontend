@@ -14,11 +14,12 @@ import sharedUI from 'shared-ui'
 import { store } from './store/store'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faFolder, faFile } from '@fortawesome/free-solid-svg-icons'
+import { faFolder, faFile, faExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 library.add(faFolder)
 library.add(faFile)
+library.add(faExclamation)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

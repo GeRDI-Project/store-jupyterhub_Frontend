@@ -30,7 +30,7 @@
       <h5>All selected files have been successfully copied to your storage space.</h5>
       <transition appear name="fade">
         <div v-if="step == 6" class="files-display">
-          <b-button variant="link" @click="ok()">Go Back to Bookmark</b-button>
+          <b-button href="/bookmark" variant="link" @click="ok()">Go Back to Bookmark</b-button>
           <b-button variant="outline-primary" @click="openJupyter()">Open your Jupyter Notebook</b-button>
         </div>
       </transition>

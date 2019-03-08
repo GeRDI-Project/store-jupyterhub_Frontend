@@ -16,6 +16,7 @@
 
 import axios from 'axios'
 import usercookie from '../../util/usercookie.js'
+import router from '../../router'
 
 const state = {
   step: 0,
@@ -129,7 +130,7 @@ const actions = {
           id: id
         })
       } else {
-        self.commit('setError', true)
+        router.push({ path: 'error', params: { sessionId: id, code: 100}}) // TODO: Why is dis not workin?
       }
     })
   },
@@ -159,7 +160,6 @@ const actions = {
     if(payload.dir) url += ('?dir=' + payload.dir)
     axios.get(url)
     .catch(function(error) {
-      console.error(error)
     });
   },
   createDir({ commit, state }, payload ) {
@@ -178,7 +178,6 @@ const actions = {
       })
       .catch(function(error) {
         reject(error)
-        console.error(error)
       });
     })
   },
@@ -190,17 +189,11 @@ const actions = {
       if (response.data.reduce((a, b) => a && (b.state == 'FINISHED' || b.state == 'ERROR') ,true) == true) {
         self.commit('stopInterval')
         self.commit('setLoading', false)
-        //self.stopInterval()
-        //self.$refs.finishedStore.show()
       }
     })
     .catch(function(error) {
       self.commit('setLoading', false)
       self.commit('stopInterval')
-      //self.errMsg = error.response;
-      console.error(error)
-      //self.stopInterval()
-      //self.$refs.errStore.show()
     });
   }
 }
