@@ -130,7 +130,7 @@ const actions = {
           id: id
         })
       } else {
-        router.push({ path: 'error', params: { sessionId: id, code: 100}}) // TODO: Why is dis not workin?
+        router.push({ name: 'error', params: { sessionId: id, code: 100}}) // TODO: Why is dis not workin?
       }
     })
   },

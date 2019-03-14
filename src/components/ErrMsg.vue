@@ -14,7 +14,7 @@ export default {
   props: {
     showContact: {
       type: Boolean,
-      default: true
+      default: false
     },
     showBookmark: {
       type: Boolean,
@@ -25,10 +25,9 @@ export default {
     mailLink: function () {
       let sessionId = this.$route.params.sessionId
       let code = this.$route.params.code
-      var body = 'To whom it may concern,\n\nwhile trying to store some data into Jupyter Hub, I encountered an error. My Session ID is ' // Add username and 
+      var body = 'To whom it may concern,\n\nwhile trying to store some data into Jupyter Hub, I encountered an error. My Session ID is ' // Add username and
       body += sessionId + ' and I received following error code: ' + code + '.\n\n'
       body += 'Thank you and best regards,'
-      console.log(body)
       return 'mailto:a.busch@zbw.de?subject=Error%20in%20Store&body=' + encodeURIComponent(body)
     }
   }

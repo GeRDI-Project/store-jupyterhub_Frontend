@@ -4,7 +4,7 @@
       <font-awesome-icon class="warning-circle-content float-left mr-5" icon="exclamation"/>
       <h2>Oh Snap! This shouldn't have happened.</h2>
     </div>
-    <err-msg v-if="errCode == 100" class="p-4 text-center">
+    <err-msg v-if="errCode == 100" :showContact="true" class="p-4 text-center">
       We aren't able to find your session. Either the server doesn't respond or your session is expired. Please go back to Bookmark and try it again in a few minutes. If this issue persists, feel free to contact us.
     </err-msg>
     <err-msg v-if="errCode == 110" class="p-4 text-center">
