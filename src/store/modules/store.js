@@ -130,11 +130,11 @@ const actions = {
           id: id
         })
       } else {
-        router.push({ name: 'error', params: { sessionId: id, code: 100}}) // TODO: Why is dis not workin?
+        router.push({ name: 'error', params: { sessionId: id, code: 100 }})
       }
     })
   },
-  login ({ commit, state }, payload ) {
+  login({ commit, state }, payload ) {
     commit('creatingVolume')
     let self = this
     let id = payload.id
@@ -148,7 +148,7 @@ const actions = {
       })
     })
     .catch(function(e) {
-      self.$refs.failedLogin.show()
+      router.push({ name: 'error', params: { sessionId: id, code: 200 }})
     })
   },
   triggerCopy({ commit, state }, payload ) {
@@ -159,8 +159,9 @@ const actions = {
     let url = '/api/v1/store-jhub/copy/' + payload.sessionId
     if(payload.dir) url += ('?dir=' + payload.dir)
     axios.get(url)
-    .catch(function(error) {
-    });
+      .catch(function(error) {
+        router.push({ name: 'error', params: { sessionId: id, code: 300 }})
+      });
   },
   createDir({ commit, state }, payload ) {
     let self = this
@@ -194,6 +195,7 @@ const actions = {
     .catch(function(error) {
       self.commit('setLoading', false)
       self.commit('stopInterval')
+      router.push({ name: 'error', params: { sessionId: id, code: 400 }})
     });
   }
 }

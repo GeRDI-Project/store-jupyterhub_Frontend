@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <slot>The server returned an unexpected response. Please go to Bookmark and try it again.</slot>
+  <div class="text-center">
+    <slot>Something unexpected happened. Please go to Bookmark and try it again. If this issue persists, please contact us and explain the steps you performed right before this error occured.</slot>
     <div class="mt-3">
       <b-btn v-if="showContact" :href="mailLink" variant="link">Contact us</b-btn>
       <b-btn v-if="showBookmark" href="/bookmark" variant="primary">Go to Bookmark</b-btn>
@@ -14,7 +14,7 @@ export default {
   props: {
     showContact: {
       type: Boolean,
-      default: false
+      default: true
     },
     showBookmark: {
       type: Boolean,
@@ -25,7 +25,7 @@ export default {
     mailLink: function () {
       let sessionId = this.$route.params.sessionId
       let code = this.$route.params.code
-      var body = 'To whom it may concern,\n\nwhile trying to store some data into Jupyter Hub, I encountered an error. My Session ID is ' // Add username and
+      let body = 'To whom it may concern,\n\nI\'ve encountered an error, while trying to store data into Jupyter Hub. My Session ID is ' // TODO Add username once AAI is running
       body += sessionId + ' and I received following error code: ' + code + '.\n\n'
       body += 'Thank you and best regards,'
       return 'mailto:a.busch@zbw.de?subject=Error%20in%20Store&body=' + encodeURIComponent(body)
@@ -34,6 +34,5 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 </style>

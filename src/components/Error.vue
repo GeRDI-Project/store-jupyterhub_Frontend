@@ -4,15 +4,19 @@
       <font-awesome-icon class="warning-circle-content float-left mr-5" icon="exclamation"/>
       <h2>Oh Snap! This shouldn't have happened.</h2>
     </div>
-    <err-msg v-if="errCode == 100" :showContact="true" class="p-4 text-center">
+    <err-msg v-if="errCode == 100" :showContact="true" class="p-4">
       We aren't able to find your session. Either the server doesn't respond or your session is expired. Please go back to Bookmark and try it again in a few minutes. If this issue persists, feel free to contact us.
     </err-msg>
-    <err-msg v-if="errCode == 110" class="p-4 text-center">
-      We aren't able to find your session. Either the server doesn't respond or your session is expired. Please go back to Bookmark and try it again in a few minutes. If this issue persists, feel free to contact us.
+    <err-msg v-else-if="errCode == 200" :showContact="true" class="p-4">
+      We aren't able to retrieve a data volume for your data. This is most probably a temporary problem. Please try again later. If this issue persists, please contact us.
     </err-msg>
-    <err-msg v-if="errCode == 120" class="p-4 text-center">
-      We aren't able to find your session. Either the server doesn't respond or your session is expired. Please go back to Bookmark and try it again in a few minutes. If this issue persists, feel free to contact us.
+    <err-msg v-else-if="errCode == 300" :showContact="true" class="p-4">
+      The server ran into an error while triggering the copy process. This is most probably a temporary problem. Please try again later. If this issue persists, please contact us.
     </err-msg>
+    <err-msg v-else-if="errCode == 400" :showContact="true" class="p-4">
+      We ran into an error checking the progress of the copy process. The process will probably finish correctly regardless of this error. Check if the data was correctly copied in a few minutes. If not, please retry to store your data in a few minutes.
+    </err-msg>
+    <err-msg v-else class="p-4"></err-msg>
   </div>
 </template>
 
