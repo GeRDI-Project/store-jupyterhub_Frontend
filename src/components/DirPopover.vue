@@ -23,8 +23,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: 'DirPopover',
   props: ['show', 'target'],
