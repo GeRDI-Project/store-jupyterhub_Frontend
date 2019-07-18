@@ -28,7 +28,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.config.productionTip = false
 
-Vue.use(sharedUI)
+Vue.use(sharedUI, { store: store })
 Vue.use(BootstrapVue)
 
 Vue.component('app', App)

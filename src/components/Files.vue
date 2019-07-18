@@ -39,9 +39,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import usercookie from '../util/usercookie.js'
-
 export default {
   name: 'Files',
   data () {
@@ -73,10 +70,18 @@ export default {
     },
     step: function() {
         return this.$store.getters.getCurrentStep
+    },
+    isChecked: function () {
+      return this.$gerdi.aai.isChecked()
     }
   },
   watch: {
-    '$route.query': "load"
+    '$route.query': "load",
+    isChecked: function() {
+      var self = this
+      if (this.$gerdi.aai.getUser() === null) this.$gerdi.aai.signInUser()
+      this.$store.dispatch('init', { vm: self })
+    }
   },
   methods: {
     load() {
@@ -104,7 +109,7 @@ export default {
       window.location='/bookmark'
     },
     openJupyter() {
-      window.location='/analyze/user/' + usercookie.getUsername() + '/tree'
+      window.location='/analyze/user/' + this.$gerdi.aai.getUser().sub
     }
   }
 }

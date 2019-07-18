@@ -15,10 +15,11 @@
  */
 
 import axios from 'axios'
-import usercookie from '../../util/usercookie.js'
 import router from '../../router'
 
 const state = {
+  initialized: false,
+  payload: null,
   step: 0,
   files: [],
   loading: true,
@@ -48,6 +49,9 @@ const getters = {
 }
 
 const mutations = {
+  initialize (state) {
+    state.initialized = true
+  },
   creatingVolume (state) {
     state.step = 1
   },
@@ -113,7 +117,16 @@ const mutations = {
 
 // actions
 const actions = {
+  init({ commit, state }, payload) {
+    axios.defaults.headers.common = {'Authorization': 'Bearer ' + payload.vm.$gerdi.aai.getIdToken()}
+    this.commit('initialize')
+    if (state.payload !== null) this.dispatch('load', state.payload)
+  },
   load({ commit, state }, payload) {
+    if (state.initialized === false) {
+      state.payload = payload
+      return
+    }
     let self = this
     self.commit('setLoading', true)
     var id = payload.sessionId
