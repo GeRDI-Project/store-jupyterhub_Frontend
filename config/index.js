@@ -50,7 +50,7 @@ module.exports = {
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'store-jhub/static',
+    assetsSubDirectory: 'store/jhub-store/static',
     assetsPublicPath: '/',
 
     /**
