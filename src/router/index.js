@@ -11,12 +11,12 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/store-jhub/files/:sessionId',
+      path: '/store/jhub-store/files/:sessionId',
       name: 'files',
       component: Files
     },
     {
-      path: '/store-jhub/error/:sessionId/:code',
+      path: '/store/jhub-store/error/:sessionId/:code',
       name: 'error',
       component: Error
     }
